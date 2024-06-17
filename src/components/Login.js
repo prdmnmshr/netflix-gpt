@@ -19,10 +19,10 @@ const Login = () => {
   };
   const handleButtonClick = () => {
     //validate form data
-
     let message = checkValidDate(email.current.value, password.current.value);
     setErrormessage(message);
-    if (!message) {
+    if (message) return;
+    if(!isSignInForm){
       createUserWithEmailAndPassword(
         auth,
         email.current.value,
@@ -50,6 +50,7 @@ const Login = () => {
           console.log("user signed in----", user);
         })
         .catch((error) => {
+          console.log('error----------', error);
           const errorCode = error.code;
           const errorMessage = error.message;
           console.log(errorCode + "-" + errorMessage);
