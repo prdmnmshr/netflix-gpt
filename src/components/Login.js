@@ -1,16 +1,20 @@
 import React from "react";
 import { useState, useRef } from "react";
 import Header from "./Header";
-import { checkValidDate } from "./utils/validate";
+import { checkValidDate } from "../utils/validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile
 } from "firebase/auth";
-import { auth } from "././utils/firebase";
+import { auth } from "../utils/firebase";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  const navigate = useNavigate();
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrormessage] = useState(null);
+  const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
 
@@ -31,7 +35,14 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log("registered user ----------", user);
+          updateProfile(user, {
+            displayName: name.current.value, photoURL: "https://avatars.githubusercontent.com/u/27763064?v=4"
+          }).then(() => {
+            navigate("/browse")
+          }).catch((error) => {
+            // An error occurred
+            // ...
+          });
         })
         .catch((error) => {
           const errorCode = error.code;
